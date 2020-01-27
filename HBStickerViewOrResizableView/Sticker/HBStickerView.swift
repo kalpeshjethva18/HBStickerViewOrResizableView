@@ -225,10 +225,21 @@ class HBStickerView: HBXib,UIGestureRecognizerDelegate {
             initialDistance = CGpointGetDistance(center, point2: touchLocation!)
             
         case .changed:
-            let ang = atan2(touchLocation!.y - center.y, touchLocation!.x - center.x)
-            
+                        let ang = atan2(touchLocation!.y - center.y, touchLocation!.x - center.x)
             let angleDiff = deltaAngle! - ang
-            transform = CGAffineTransform(rotationAngle: -angleDiff)
+            
+            let a = transform.a
+            let b = transform.b
+            let c = transform.c
+            let d = transform.d
+
+            let sx = sqrt(a * a + b * b)
+            let sy = sqrt(c * c + d * d)
+            
+            let currentScale = CGPoint(x: sx, y: sy)
+            let scale = CGAffineTransform(scaleX: currentScale.x, y: currentScale.y)
+            self.transform = scale.rotated(by: -angleDiff)
+
             layoutIfNeeded()
         case .ended:
             enableMoveRestriction = true
